@@ -1,5 +1,6 @@
 package maze;
 
+import java.util.LinkedList;
 import java.util.Stack;
 import java.util.List;
 import java.util.ArrayList;
@@ -61,6 +62,33 @@ public class Maze implements Cloneable {
                 side.enter(this);
             }
         }
+    }
+
+    /**
+     * Zhonghua add
+     */
+    public List<Door> getDoorsAround(){
+        List<Door> doors = new LinkedList<>();
+        if (curRoom != null){
+            Direction direction = Direction.first();
+            do {
+                MapSite side = curRoom.getSide(direction);
+                if (side instanceof Door){
+                    if (!((Door) side).isOpen())
+                        doors.add((Door) side);
+                }
+                direction = direction.next();
+            }while (direction != null);
+        }
+        return doors;
+    }
+
+    public void setDoor(Door door, boolean status){
+        if (door != null){
+            door.setOpen(status);
+        }
+        if (view != null)
+            view.repaint();
     }
 
     public void draw(Graphics g) {

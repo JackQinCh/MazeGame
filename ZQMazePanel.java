@@ -24,7 +24,7 @@ public class ZQMazePanel extends JPanel {
                 dim = new Dimension(d.width * ROOM_SIZE + 2 * MARGIN,
                         d.height * ROOM_SIZE + 2 * MARGIN);
             }
-            addKeyListener(new Maze.MazeKeyListener(maze));
+            addKeyListener(new ZQMazeKeyListener(maze));
         }
         repaint();
     }
