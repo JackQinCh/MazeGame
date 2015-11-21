@@ -11,17 +11,28 @@ public final class ZQThemesFactory {
 
     private static final String[] themes = {"Harry", "Snow", "Default"};
 
-    public static MazeFactory createFactoryWithTheme(String theme){
+    public static Maze createMazeWithTheme(String theme){
+        MazeFactory factory;
+
         switch (theme){
             case "Harry":
-                return new HarryPotterMazeFactory();
+                factory = new HarryPotterMazeFactory();
+                break;
             case "Snow":
-                return new SnowWhiteMazeFactory();
+                factory = new SnowWhiteMazeFactory();
+                break;
             case "Default":
-                return new MazeFactory();
+                factory = new MazeFactory();
+                break;
             default:
-                return new MazeFactory();
+                factory = new MazeFactory();
+                break;
         }
+
+        MazeBuilder builder = new FactoryMazeBuilder(factory);
+        Maze maze = MazeGameBuilder.createMaze(builder);
+        maze.setCurrentRoom(1);
+        return maze;
     }
 
     public static String[] getThemes() {

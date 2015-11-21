@@ -15,7 +15,7 @@ public class ZQMain extends JFrame{
     ZQMazePanel mazePanel;
 
     public ZQMain(String name) {
-        maze = newMaze("Default");
+        maze = ZQThemesFactory.createMazeWithTheme("Default");
 
         mazePanel = new ZQMazePanel(maze);
 
@@ -31,8 +31,6 @@ public class ZQMain extends JFrame{
                 screenSize.height / 2 - frameDim.height / 2);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
-
-
 
     protected JMenuBar makeMenuBar(ZQMazePanel mazePanel){
         JMenuBar menubar = new JMenuBar();
@@ -76,34 +74,18 @@ public class ZQMain extends JFrame{
             this.mazePanel = mazePanel;
         }
 
-        /**
-         * Invoked when an action occurs.
-         *
-         * @param e
-         */
         @Override
         public void actionPerformed(ActionEvent e) {
             String theme = e.getActionCommand();
-            mazePanel.setMaze(newMaze(theme));
+            mazePanel.setMaze(ZQThemesFactory.createMazeWithTheme(theme));
         }
         protected ZQMazePanel mazePanel;
-    }
-
-    static Maze newMaze(String theme){
-        Maze maze;
-        MazeBuilder builder;
-        MazeFactory factory = ZQThemesFactory.createFactoryWithTheme(theme);
-        builder = new FactoryMazeBuilder(factory);
-
-        maze = MazeGameBuilder.createMaze(builder);
-        maze.setCurrentRoom(1);
-        return maze;
     }
 
     public static void main(String[] args) {
 
         JFrame frame;
-        frame = new ZQMain("Maze -- Builder");
+        frame = new ZQMain("Maze -- Zhonghua");
         frame.setVisible(true);
 
     }
