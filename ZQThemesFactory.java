@@ -6,8 +6,8 @@ package maze;
  */
 public final class ZQThemesFactory {
     private static MazeFactory factory = new MazeFactory();
-    private static int ROW = 8;
-    private static int COL = 7;
+    private static int ROW = 5;
+    private static int COL = 4;
 
     private ZQThemesFactory() throws IllegalAccessException {
         throw new IllegalAccessException();

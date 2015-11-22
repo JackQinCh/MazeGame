@@ -1,6 +1,8 @@
 package maze;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by jack on 15/11/21.
@@ -17,6 +19,9 @@ public final class ZQMazeGambeBuilder {
 
     private static Random random;    // pseudo-random number generator
     private static long seed;        // pseudo-random number generator seed
+
+    private static int X =1;
+    private static int Y =1;
 
 
 
@@ -86,28 +91,28 @@ public final class ZQMazeGambeBuilder {
         for (int i = 0; i < COL*ROW; i++) {
             builder.buildRoom( i+1 );
         }
-        for (int i = 1; i <= ROW; i++) {
-            for (int j = 1; j <= COL; j++) {
-                if (!east[j][i]){
+        for (int i = 1; i <= COL; i++) {
+            for (int j = 1; j <= ROW; j++) {
+                if (!east[i][j]){
                     int r = random.nextInt(Math.min(COL, ROW));
                     if (r == 0)
-                        builder.buildDoor((i-1)*COL + j, (i-1)*COL + j + 1, Direction.EAST, false);
+                        builder.buildDoor((j-1)*COL + i, (j-1)*COL + i + 1, Direction.EAST, false);
                     else
-                        builder.buildDoor((i-1)*COL + j, (i-1)*COL + j + 1, Direction.EAST, true);
+                        builder.buildDoor((j-1)*COL + i, (j-1)*COL + i + 1, Direction.EAST, true);
 
-                    int x = (i-1)*COL + j;
-                    int y = (i-1)*COL + j + 1;
+                    int x = (j-1)*COL + i;
+                    int y = (j-1)*COL + i + 1;
                     System.out.println("West: room1("+x+"), room2("+y+")");
                 }
-                if (!north[j][i]){
+                if (!north[i][j]){
                     int r = random.nextInt(Math.min(COL, ROW));
                     if (r == 0)
-                        builder.buildDoor((i-1)*COL + j, i*COL + j, Direction.NORTH, false);
+                        builder.buildDoor((j-1)*COL + i, j*COL + i, Direction.NORTH, false);
                     else
-                        builder.buildDoor((i-1)*COL + j, i*COL + j, Direction.NORTH, true);
+                        builder.buildDoor((j-1)*COL + i, j*COL + i, Direction.NORTH, true);
 
-                    int x = (i-1)*COL + j;
-                    int y = i*COL + j;
+                    int x = (j-1)*COL + i;
+                    int y = j*COL + i;
                     System.out.println("North: room1("+x+"), room2("+y+")");
                 }
             }
@@ -188,40 +193,115 @@ public final class ZQMazeGambeBuilder {
         generate(1, 1);
     }
 
-
-
     // solve the maze using depth-first search
-    private void solve(int x, int y) {
+    private static void solve(int x, int y, ZQMazePanel mazePanel) {
         if (x == 0 || y == 0 || x == COL+1 || y == ROW+1) return;
         if (done || visited[x][y]) return;
         visited[x][y] = true;
 
-//        StdDraw.setPenROWor(StdDraw.BLUE);
-//        StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
-//        StdDraw.show(30);
-
         // reached middle
-        if (x == COL/2 && y == ROW/2) done = true;
+        if (x == COL && y == ROW) done = true;
 
-        if (!north[x][y]) solve(x, y + 1);
-        if (!east[x][y])  solve(x + 1, y);
-        if (!south[x][y]) solve(x, y - 1);
-        if (!west[x][y])  solve(x - 1, y);
+        if (done){
+            System.out.println("Solve Done!");
+            return;
+        }
 
-        if (done) return;
+        System.out.println("Solving: "+x+", "+y);
+        System.out.println("Current Room: "+ mazePanel.getMaze().getCurrentRoom().getRoomNumber());
 
-//        StdDraw.setPenROWor(StdDraw.GRAY);
-//        StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
-//        StdDraw.show(30);
+        if (!north[x][y] && !visited[x][y+1]){
+            MapSite site = mazePanel.getMaze().getCurrentRoom().getSide(Direction.NORTH);
+            if( site instanceof Door){
+                if (!((Door) site).isOpen()){
+                    Command command = new ZQMazeOpenDoorCommand(mazePanel.getMaze());
+                    mazePanel.getMaze().doCommand(command);
+                }
+            }
+            Command command = new MazeMoveCommand(mazePanel.getMaze(), Direction.NORTH);
+            mazePanel.getMaze().doCommand(command);
+            X = x;
+            Y = y + 1;
+            return;
+        }
+        if (!east[x][y] && !visited[x+1][y]){
+            MapSite site = mazePanel.getMaze().getCurrentRoom().getSide(Direction.EAST);
+            if( site instanceof Door){
+                if (!((Door) site).isOpen()){
+                    Command command = new ZQMazeOpenDoorCommand(mazePanel.getMaze());
+                    mazePanel.getMaze().doCommand(command);
+                }
+            }
+            Command command = new MazeMoveCommand(mazePanel.getMaze(), Direction.EAST);
+            mazePanel.getMaze().doCommand(command);
+            X = x + 1;
+            Y = y;
+            return;
+        }
+        if (!south[x][y] && !visited[x][y-1]){
+            MapSite site = mazePanel.getMaze().getCurrentRoom().getSide(Direction.SOUTH);
+            if( site instanceof Door){
+                if (!((Door) site).isOpen()){
+                    Command command = new ZQMazeOpenDoorCommand(mazePanel.getMaze());
+                    mazePanel.getMaze().doCommand(command);
+                }
+            }
+            Command command = new MazeMoveCommand(mazePanel.getMaze(), Direction.SOUTH);
+            mazePanel.getMaze().doCommand(command);
+            X = x;
+            Y = y - 1;
+            return;
+        }
+        if (!west[x][y] && !visited[x-1][y]){
+            MapSite site = mazePanel.getMaze().getCurrentRoom().getSide(Direction.WEST);
+            if( site instanceof Door){
+                if (!((Door) site).isOpen()){
+                    Command command = new ZQMazeOpenDoorCommand(mazePanel.getMaze());
+                    mazePanel.getMaze().doCommand(command);
+                }
+            }
+            Command command = new MazeMoveCommand(mazePanel.getMaze(), Direction.WEST);
+            mazePanel.getMaze().doCommand(command);
+            X = x - 1;
+            Y = y;
+            return;
+        }
+
+        //Reset visited[][]
+        for (int i = 1; i <= COL; i++)
+            for (int j = 1; j <= ROW; j++)
+                visited[i][j] = false;
     }
 
     // solve the maze starting from the start state
-    public void solve() {
+    public static void solve(ZQMazePanel mazePanel) {
+        System.out.println("Start Solve");
+        int currentRoomNum = mazePanel.getMaze().getCurrentRoom().getRoomNumber();
+        System.out.println("Current Room:"+currentRoomNum);
+
+        X = currentRoomNum % COL;
+        Y = currentRoomNum / COL + 1;
+        if (X == 0){
+            X = COL;
+            Y = Y - 1;
+        }
+        System.out.println("X:"+X+", Y:"+Y);
+
         for (int x = 1; x <= COL; x++)
             for (int y = 1; y <= ROW; y++)
                 visited[x][y] = false;
         done = false;
-        solve(1, 1);
+
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (!done)
+                    solve(X, Y, mazePanel);
+                else
+                    timer.cancel();
+            }
+        }, 0, 500);
     }
 
 }
