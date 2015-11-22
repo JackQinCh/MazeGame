@@ -6,7 +6,8 @@ import java.util.Random;
  * Created by jack on 15/11/21.
  */
 public final class ZQMazeGambeBuilder {
-    private static int N = 5;                 // dimension of maze
+    private static int COL = 3;                 // dimension of maze
+    private static int ROW = 4;                 // dimension of maze
     private static boolean[][] north;     // is there a wall to north of cell i, j
     private static boolean[][] east;
     private static boolean[][] south;
@@ -31,65 +32,106 @@ public final class ZQMazeGambeBuilder {
         init();
         generate();
 
+        System.out.println("North:");
+        for (int i = 0; i < ROW+2; i++) {
+            for (int j = 0; j < COL+2; j++) {
+                if (north[j][i])
+                    System.out.print("1 ");
+                else
+                    System.out.print("0 ");
+            }
+            System.out.println(" ");
+        }
+        System.out.println("South:");
+        for (int i = 0; i < ROW+2; i++) {
+            for (int j = 0; j < COL+2; j++) {
+                if (south[j][i])
+                    System.out.print("1 ");
+                else
+                    System.out.print("0 ");
+            }
+            System.out.println(" ");
+        }
+        System.out.println("East:");
+        for (int i = 0; i < ROW+2; i++) {
+            for (int j = 0; j < COL+2; j++) {
+                if (east[j][i])
+                    System.out.print("1 ");
+                else
+                    System.out.print("0 ");
+            }
+            System.out.println(" ");
+        }
+        System.out.println("West:");
+        for (int i = 0; i < ROW+2; i++) {
+            for (int j = 0; j < COL+2; j++) {
+                if (west[j][i])
+                    System.out.print("1 ");
+                else
+                    System.out.print("0 ");
+            }
+            System.out.println(" ");
+        }
+
+
+
         return buildRoom(builder);
     }
 
     private static Maze buildRoom(MazeBuilder builder) {
-        for (int i = 0; i < N*N; i++) {
+        for (int i = 0; i < COL*ROW; i++) {
             builder.buildRoom( i+1 );
         }
-        for (int i = 1; i <= N; i++) {
-            for (int j = 1; j <= N; j++) {
+        for (int i = 1; i <= ROW; i++) {
+            for (int j = 1; j <= COL; j++) {
                 if (!east[j][i]){
-                    int r = random.nextInt(N);
+                    int r = random.nextInt(Math.min(COL, ROW));
                     if (r == 0)
-                        builder.buildDoor((i-1)*N + j, (i-1)*N + j + 1, Direction.EAST, false);
+                        builder.buildDoor((i-1)*COL + j, (i-1)*COL + j + 1, Direction.EAST, false);
                     else
-                        builder.buildDoor((i-1)*N + j, (i-1)*N + j + 1, Direction.EAST, true);
+                        builder.buildDoor((i-1)*COL + j, (i-1)*COL + j + 1, Direction.EAST, true);
+
+                    int x = (i-1)*COL + j;
+                    int y = (i-1)*COL + j + 1;
+                    System.out.println("West: room1("+x+"), room2("+y+")");
                 }
                 if (!north[j][i]){
-                    int r = random.nextInt(N);
+                    int r = random.nextInt(Math.min(COL, ROW));
                     if (r == 0)
-                        builder.buildDoor((i-1)*N + j, (i-1)*N + j + N, Direction.NORTH, false);
+                        builder.buildDoor((i-1)*COL + j, i*COL + j, Direction.NORTH, false);
                     else
-                        builder.buildDoor((i-1)*N + j, (i-1)*N + j + N, Direction.NORTH, true);
+                        builder.buildDoor((i-1)*COL + j, i*COL + j, Direction.NORTH, true);
+
+                    int x = (i-1)*COL + j;
+                    int y = i*COL + j;
+                    System.out.println("North: room1("+x+"), room2("+y+")");
                 }
             }
         }
-
-//        builder.buildDoor(1, 2, Direction.EAST, true);
-//        builder.buildDoor(2, 3, Direction.EAST, true);
-//        builder.buildDoor(3, 6, Direction.NORTH, true);
-//        builder.buildDoor(5, 6, Direction.EAST, true);
-//        builder.buildDoor(4, 5, Direction.EAST, false);
-//        builder.buildDoor(6, 9, Direction.NORTH, true);
-//        builder.buildDoor(7, 8, Direction.EAST, true);
-//        builder.buildDoor(8, 9, Direction.EAST, true);
-
 
         return builder.getMaze();
     }
 
     private static void init() {
         // initialize border cells as already visited
-        visited = new boolean[N+2][N+2];
-        for (int x = 0; x < N+2; x++) {
+        visited = new boolean[COL+2][ROW+2];
+        for (int x = 0; x < COL+2; x++) {
             visited[x][0] = true;
-            visited[x][N+1] = true;
+            visited[x][ROW+1] = true;
         }
-        for (int y = 0; y < N+2; y++) {
+        for (int y = 0; y < ROW+2; y++) {
             visited[0][y] = true;
-            visited[N+1][y] = true;
+            visited[COL+1][y] = true;
         }
 
 
         // initialze all walls as present
-        north = new boolean[N+2][N+2];
-        east  = new boolean[N+2][N+2];
-        south = new boolean[N+2][N+2];
-        west  = new boolean[N+2][N+2];
-        for (int x = 0; x < N+2; x++) {
-            for (int y = 0; y < N+2; y++) {
+        north = new boolean[COL+2][ROW+2];
+        east  = new boolean[COL+2][ROW+2];
+        south = new boolean[COL+2][ROW+2];
+        west  = new boolean[COL+2][ROW+2];
+        for (int x = 0; x < COL+2; x++) {
+            for (int y = 0; y < ROW+2; y++) {
                 north[x][y] = true;
                 east[x][y]  = true;
                 south[x][y] = true;
@@ -146,16 +188,16 @@ public final class ZQMazeGambeBuilder {
 
     // solve the maze using depth-first search
     private void solve(int x, int y) {
-        if (x == 0 || y == 0 || x == N+1 || y == N+1) return;
+        if (x == 0 || y == 0 || x == COL+1 || y == ROW+1) return;
         if (done || visited[x][y]) return;
         visited[x][y] = true;
 
-//        StdDraw.setPenColor(StdDraw.BLUE);
+//        StdDraw.setPenROWor(StdDraw.BLUE);
 //        StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
 //        StdDraw.show(30);
 
         // reached middle
-        if (x == N/2 && y == N/2) done = true;
+        if (x == COL/2 && y == ROW/2) done = true;
 
         if (!north[x][y]) solve(x, y + 1);
         if (!east[x][y])  solve(x + 1, y);
@@ -164,15 +206,15 @@ public final class ZQMazeGambeBuilder {
 
         if (done) return;
 
-//        StdDraw.setPenColor(StdDraw.GRAY);
+//        StdDraw.setPenROWor(StdDraw.GRAY);
 //        StdDraw.filledCircle(x + 0.5, y + 0.5, 0.25);
 //        StdDraw.show(30);
     }
 
     // solve the maze starting from the start state
     public void solve() {
-        for (int x = 1; x <= N; x++)
-            for (int y = 1; y <= N; y++)
+        for (int x = 1; x <= COL; x++)
+            for (int y = 1; y <= ROW; y++)
                 visited[x][y] = false;
         done = false;
         solve(1, 1);
