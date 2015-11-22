@@ -33,12 +33,14 @@ public class ZQMain extends JFrame{
     protected JMenuBar makeMenuBar(ZQMazePanel mazePanel){
         JMenuBar menubar = new JMenuBar();
 
+        //Undo
         JMenu menu = new JMenu("Command");
         JMenuItem menuItem = new JMenuItem("undo");
         menuItem.addActionListener(new MazeCommandAction(mazePanel));
         menu.add(menuItem);
         menubar.add(menu);
 
+        //Themes
         menu = new JMenu("Themes");
         String[] themes = ZQThemesFactory.getThemes();
         for (String theme:themes){
@@ -48,6 +50,20 @@ public class ZQMain extends JFrame{
             menu.add(menuItem);
         }
         menubar.add(menu);
+
+        //Row and Col
+        menu = new JMenu("Configure");
+        menuItem = new JMenuItem("Set Row");
+        menuItem.setActionCommand("Set Row");
+        menuItem.addActionListener(new DimensionCommandAction(mazePanel));
+        menu.add(menuItem);
+        menuItem = new JMenuItem("Set Col");
+        menuItem.setActionCommand("Set Col");
+        menuItem.addActionListener(new DimensionCommandAction(mazePanel));
+        menu.add(menuItem);
+        menubar.add(menu);
+
+
 
 
         return menubar;
@@ -76,6 +92,53 @@ public class ZQMain extends JFrame{
         public void actionPerformed(ActionEvent e) {
             String theme = e.getActionCommand();
             mazePanel.setMaze(ZQThemesFactory.createMazeWithTheme(theme));
+        }
+        protected ZQMazePanel mazePanel;
+    }
+
+    static class DimensionCommandAction implements ActionListener{
+        public DimensionCommandAction(ZQMazePanel mazePanel) {
+            this.mazePanel = mazePanel;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String command = e.getActionCommand();
+            String s = "";
+            if (command.equals("Set Row")){
+                s = JOptionPane.showInputDialog("Input Row",ZQThemesFactory.getROW());
+                System.out.println(s);
+                try{
+                    int n = Integer.parseInt(s);
+                    System.out.println(n);
+                    if (n>0 && n<20){
+                        mazePanel.setMaze(ZQThemesFactory.createMazeWithSize(n, ZQThemesFactory.getCOL()));
+                    }else {
+                        JOptionPane.showMessageDialog(mazePanel,"The number must in [0,20] range.");
+                    }
+                }catch (NumberFormatException e2){
+                    JOptionPane.showMessageDialog(mazePanel,"Please input number.");
+                }
+
+            }else if (command.equals("Set Col")){
+                s = JOptionPane.showInputDialog("Input Col",ZQThemesFactory.getCOL());
+                System.out.println(s);
+                try{
+                    int n = Integer.parseInt(s);
+                    System.out.println(n);
+                    if (n>0 && n<20){
+                        mazePanel.setMaze(ZQThemesFactory.createMazeWithSize(ZQThemesFactory.getROW(), n));
+                    }else {
+                        JOptionPane.showMessageDialog(mazePanel,"The number must in [0,20] range.");
+                    }
+                }catch (NumberFormatException e2){
+                    JOptionPane.showMessageDialog(mazePanel,"Please input number.");
+                }
+
+            }
+
+
+
         }
         protected ZQMazePanel mazePanel;
     }

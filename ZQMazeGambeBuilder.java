@@ -7,7 +7,7 @@ import java.util.Random;
  */
 public final class ZQMazeGambeBuilder {
     private static int COL = 3;                 // dimension of maze
-    private static int ROW = 4;                 // dimension of maze
+    private static int ROW = 3;                 // dimension of maze
     private static boolean[][] north;     // is there a wall to north of cell i, j
     private static boolean[][] east;
     private static boolean[][] south;
@@ -18,6 +18,8 @@ public final class ZQMazeGambeBuilder {
     private static Random random;    // pseudo-random number generator
     private static long seed;        // pseudo-random number generator seed
 
+
+
     // static initializer
     static {
         // this is how the seed was set in Java 1.4
@@ -26,7 +28,9 @@ public final class ZQMazeGambeBuilder {
     }
 
 
-    public static Maze createMaze(MazeBuilder builder) {
+    public static Maze createMaze(MazeBuilder builder, int row, int col) {
+        ROW = row;
+        COL = col;
         builder.newMaze();
 
         init();
