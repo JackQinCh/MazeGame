@@ -24,7 +24,6 @@ public class ZQMazeKeyListener extends KeyAdapter {
             case KeyEvent.VK_DOWN:
                 System.out.println("Down key");
                 command = new MazeMoveCommand(maze, Direction.SOUTH);
-                maze.move(Direction.SOUTH);
                 break;
             case KeyEvent.VK_LEFT:
                 System.out.println("Left key");
