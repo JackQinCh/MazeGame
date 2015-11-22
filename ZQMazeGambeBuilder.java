@@ -41,16 +41,18 @@ public final class ZQMazeGambeBuilder {
         for (int i = 1; i <= N; i++) {
             for (int j = 1; j <= N; j++) {
                 if (!east[j][i]){
-                    builder.buildDoor((i-1)*N + j, (i-1)*N + j + 1, Direction.EAST, true);
-                    int room1 = (i-1)*N + j;
-                    int room2 = (i-1)*N + j + 1;
-                    System.out.println("East : room1("+room1+"),room2("+room2+")");
+                    int r = random.nextInt(N);
+                    if (r == 0)
+                        builder.buildDoor((i-1)*N + j, (i-1)*N + j + 1, Direction.EAST, false);
+                    else
+                        builder.buildDoor((i-1)*N + j, (i-1)*N + j + 1, Direction.EAST, true);
                 }
                 if (!north[j][i]){
-                    builder.buildDoor((i-1)*N + j, (i-1)*N + j + N, Direction.NORTH, true);
-                    int room1 = (i-1)*N + j;
-                    int room2 = (i-1)*N + j + N;
-                    System.out.println("North: room1("+room1+"),room2("+room2+")");
+                    int r = random.nextInt(N);
+                    if (r == 0)
+                        builder.buildDoor((i-1)*N + j, (i-1)*N + j + N, Direction.NORTH, false);
+                    else
+                        builder.buildDoor((i-1)*N + j, (i-1)*N + j + N, Direction.NORTH, true);
                 }
             }
         }
