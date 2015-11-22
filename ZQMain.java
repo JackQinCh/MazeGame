@@ -35,10 +35,13 @@ public class ZQMain extends JFrame{
 
         //Command
         JMenu menu = new JMenu("Command");
-        JMenuItem menuItem = new JMenuItem("Undo");
+        JMenuItem menuItem = new JMenuItem("New Game");
+        menuItem.addActionListener(new NewgameCommandAction(mazePanel));
+        menu.add(menuItem);
+        menuItem = new JMenuItem("Undo");
         menuItem.addActionListener(new MazeCommandAction(mazePanel));
         menu.add(menuItem);
-        menuItem = new JMenuItem("Solve itself");
+        menuItem = new JMenuItem("Solve");
         menuItem.addActionListener(new SolveActionListner(mazePanel));
         menu.add(menuItem);
 
@@ -83,6 +86,19 @@ public class ZQMain extends JFrame{
             mazePanel.mazeUndo();
         }
 
+        protected ZQMazePanel mazePanel;
+    }
+
+    static class NewgameCommandAction implements ActionListener {
+
+        public NewgameCommandAction(ZQMazePanel mazePanel) {
+            this.mazePanel = mazePanel;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            mazePanel.setMaze(ZQThemesFactory.createMazeWithTheme(""));
+        }
         protected ZQMazePanel mazePanel;
     }
 
