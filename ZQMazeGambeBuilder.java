@@ -1,5 +1,6 @@
 package maze;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -150,7 +151,11 @@ public final class ZQMazeGambeBuilder {
     }
 
 
-    // generate the maze
+    /**
+     * Generate the maze
+     * @param x
+     * @param y
+     */
     private static void generate(int x, int y) {
         visited[x][y] = true;
 
@@ -188,89 +193,79 @@ public final class ZQMazeGambeBuilder {
         }
     }
 
-    // generate the maze starting from lower left
+    /**
+     * Generate the maze starting from lower left
+     */
     private static void generate() {
         generate(1, 1);
     }
 
-    // solve the maze using depth-first search
-    private static void solve(int x, int y, ZQMazePanel mazePanel) {
+
+    /**
+     * Solve the maze using depth-first search
+     * @param x
+     * @param y
+     * @param mazePanel
+     * @param direction
+     */
+    private static void solve(int x, int y, ZQMazePanel mazePanel, Direction direction) {
         if (x == 0 || y == 0 || x == COL+1 || y == ROW+1) return;
         if (done || visited[x][y]) return;
         visited[x][y] = true;
 
-        // reached middle
-        if (x == COL && y == ROW) done = true;
+        if (direction != null) {
+            MapSite site = mazePanel.getMaze().getCurrentRoom().getSide(direction);
+            if (site instanceof Door) {
+                if (!((Door) site).isOpen()) {
+                    mazePanel.getMaze().setDoor(((Door) site), true);
+                    mazePanel.paintImmediately(0, 0, mazePanel.getWidth(), mazePanel.getHeight());
+                }
+            }
+            Command command = new MazeMoveCommand(mazePanel.getMaze(), direction);
+            mazePanel.getMaze().doCommand(command);
+            mazePanel.paintImmediately(0, 0, mazePanel.getWidth(), mazePanel.getHeight());
+        }
 
-        if (done){
-            System.out.println("Solve Done!");
-            return;
+        // Reached goal
+        if (x == COL && y == ROW){
+            done = true;
+        }
+
+        try{
+            Thread.currentThread().sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         System.out.println("Solving: "+x+", "+y);
         System.out.println("Current Room: "+ mazePanel.getMaze().getCurrentRoom().getRoomNumber());
 
-        if (!north[x][y] && !visited[x][y+1]){
-            MapSite site = mazePanel.getMaze().getCurrentRoom().getSide(Direction.NORTH);
-            if( site instanceof Door){
-                if (!((Door) site).isOpen()){
-                    Command command = new ZQMazeOpenDoorCommand(mazePanel.getMaze());
-                    mazePanel.getMaze().doCommand(command);
-                }
-            }
-            Command command = new MazeMoveCommand(mazePanel.getMaze(), Direction.NORTH);
-            mazePanel.getMaze().doCommand(command);
-            X = x;
-            Y = y + 1;
-            return;
+        if (!north[x][y]){
+            solve(x, y+1, mazePanel, Direction.NORTH);
         }
-        if (!east[x][y] && !visited[x+1][y]){
-            MapSite site = mazePanel.getMaze().getCurrentRoom().getSide(Direction.EAST);
-            if( site instanceof Door){
-                if (!((Door) site).isOpen()){
-                    Command command = new ZQMazeOpenDoorCommand(mazePanel.getMaze());
-                    mazePanel.getMaze().doCommand(command);
-                }
-            }
-            Command command = new MazeMoveCommand(mazePanel.getMaze(), Direction.EAST);
-            mazePanel.getMaze().doCommand(command);
-            X = x + 1;
-            Y = y;
-            return;
+        if (!east[x][y]){
+            solve(x+1, y, mazePanel, Direction.EAST);
         }
-        if (!south[x][y] && !visited[x][y-1]){
-            MapSite site = mazePanel.getMaze().getCurrentRoom().getSide(Direction.SOUTH);
-            if( site instanceof Door){
-                if (!((Door) site).isOpen()){
-                    Command command = new ZQMazeOpenDoorCommand(mazePanel.getMaze());
-                    mazePanel.getMaze().doCommand(command);
-                }
-            }
-            Command command = new MazeMoveCommand(mazePanel.getMaze(), Direction.SOUTH);
-            mazePanel.getMaze().doCommand(command);
-            X = x;
-            Y = y - 1;
-            return;
+        if (!south[x][y]){
+            solve(x, y-1, mazePanel, Direction.SOUTH);
         }
-        if (!west[x][y] && !visited[x-1][y]){
-            MapSite site = mazePanel.getMaze().getCurrentRoom().getSide(Direction.WEST);
-            if( site instanceof Door){
-                if (!((Door) site).isOpen()){
-                    Command command = new ZQMazeOpenDoorCommand(mazePanel.getMaze());
-                    mazePanel.getMaze().doCommand(command);
-                }
-            }
-            Command command = new MazeMoveCommand(mazePanel.getMaze(), Direction.WEST);
-            mazePanel.getMaze().doCommand(command);
-            X = x - 1;
-            Y = y;
-            return;
+        if (!west[x][y]){
+            solve(x-1, y, mazePanel, Direction.WEST);
         }
 
-        //Reset visited[][]
-        for (int i = 1; i <= COL; i++)
-            for (int j = 1; j <= ROW; j++)
-                visited[i][j] = false;
+        if (done){
+            System.out.println("Solve Done!");
+            return;
+        }
+        mazePanel.getMaze().undoCommand();
+        mazePanel.paintImmediately(0, 0, mazePanel.getWidth(), mazePanel.getHeight());
+
+        try{
+            Thread.currentThread().sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     // solve the maze starting from the start state
@@ -292,16 +287,9 @@ public final class ZQMazeGambeBuilder {
                 visited[x][y] = false;
         done = false;
 
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (!done)
-                    solve(X, Y, mazePanel);
-                else
-                    timer.cancel();
-            }
-        }, 0, 500);
+        solve(X, Y, mazePanel, null);
+
     }
+
 
 }
