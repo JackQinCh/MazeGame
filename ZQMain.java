@@ -10,12 +10,10 @@ import java.awt.event.ActionListener;
  */
 public class ZQMain extends JFrame{
 
-    Maze maze;
-    MazeBuilder builder;
     ZQMazePanel mazePanel;
 
     public ZQMain(String name) {
-        maze = ZQThemesFactory.createMazeWithTheme("Default");
+        Maze maze = ZQThemesFactory.createMazeWithTheme("Default");
 
         mazePanel = new ZQMazePanel(maze);
 

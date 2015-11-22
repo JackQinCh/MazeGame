@@ -30,7 +30,7 @@ public final class ZQThemesFactory {
         }
 
         MazeBuilder builder = new FactoryMazeBuilder(factory);
-        Maze maze = MazeGameBuilder.createMaze(builder);
+        Maze maze = ZQMazeGambeBuilder.createMaze(builder);//Can extend
         maze.setCurrentRoom(1);
         return maze;
     }
