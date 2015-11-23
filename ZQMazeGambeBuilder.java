@@ -1,6 +1,5 @@
 package maze;
 
-import javax.swing.*;
 import java.util.Random;
 
 /**
@@ -90,7 +89,7 @@ public final class ZQMazeGambeBuilder {
             vactoryY = ROW;
         vactory = (vactoryY-1)*COL + vactoryX;
         System.out.println("vactoryX:"+vactoryX+", vactoryY:"+vactoryY+", vactoryRoom:"+vactory);
-        maze.setVatoryRoom(vactory);
+        maze.setVictoryRoom(vactory);
         return maze;
     }
 
@@ -294,10 +293,6 @@ public final class ZQMazeGambeBuilder {
         done = false;
 
         solve(X, Y, mazePanel, null);
-
-//        if (done){
-//            JOptionPane.showMessageDialog(mazePanel,"Congratulations! You got the box!");
-//        }
 
     }
 

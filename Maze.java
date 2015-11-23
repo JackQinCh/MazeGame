@@ -40,9 +40,9 @@ public class Maze implements Cloneable {
         setCurrentRoom(room);
     }
 
-    private boolean isVactory = false;
+    private boolean isVictory = false;
     public void setCurrentRoom(Room room) {
-        if (room != curRoom && !isVactory) {
+        if (room != curRoom && !isVictory) {
             if (curRoom != null) {
                 curRoom.setInRoom(false);
             }
@@ -53,12 +53,12 @@ public class Maze implements Cloneable {
             if (view != null) {
                 view.repaint();
             }
-            checkVactory();
+            checkVictory();
         }
     }
-    private void checkVactory(){
-        if (curRoom.getRoomNumber() == vatoryRoom){
-            isVactory = true;
+    private void checkVictory(){
+        if (curRoom.getRoomNumber() == victoryRoom){
+            isVictory = true;
             if (view != null) {
                 view.repaint();
             }
@@ -108,14 +108,14 @@ public class Maze implements Cloneable {
             view.repaint();
     }
 
-    private int vatoryRoom;
+    private int victoryRoom;
 
-    public int getVatoryRoom() {
-        return vatoryRoom;
+    public int getVictoryRoom() {
+        return victoryRoom;
     }
 
-    public void setVatoryRoom(int vatoryRoom) {
-        this.vatoryRoom = vatoryRoom;
+    public void setVictoryRoom(int victoryRoom) {
+        this.victoryRoom = victoryRoom;
     }
 
     public void draw(Graphics g) {
@@ -146,11 +146,11 @@ public class Maze implements Cloneable {
                             dy + location.y * ROOM_SIZE,
                             ROOM_SIZE, ROOM_SIZE);
 
-                    if (room.getRoomNumber() == vatoryRoom){//Draw goal image
+                    if (room.getRoomNumber() == victoryRoom){//Draw goal image
 
                         BufferedImage img = null;
                         String imgScr = "./src/Box.png";
-                        if (isVactory)
+                        if (isVictory)
                             imgScr = "./src/BoxOpen.png";
                         try{
                             img = ImageIO.read(new File(imgScr));
