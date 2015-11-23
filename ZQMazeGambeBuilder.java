@@ -1,9 +1,6 @@
 package maze;
 
-import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by jack on 15/11/21.
@@ -21,10 +18,9 @@ public final class ZQMazeGambeBuilder {
     private static Random random;    // pseudo-random number generator
     private static long seed;        // pseudo-random number generator seed
 
-    private static int X =1;
-    private static int Y =1;
-
-
+    private static int vactory;
+    private static int vactoryX;
+    private static int vactoryY;
 
     // static initializer
     static {
@@ -83,9 +79,18 @@ public final class ZQMazeGambeBuilder {
             System.out.println(" ");
         }
 
+        Maze maze = buildRoom(builder);
 
-
-        return buildRoom(builder);
+        vactoryX = random.nextInt(COL);
+        if (vactoryX == 0)
+            vactoryX = COL;
+        vactoryY = random.nextInt(ROW);
+        if (vactoryY == 0)
+            vactoryY = ROW;
+        vactory = (vactoryY-1)*COL + vactoryX;
+        System.out.println("vactoryX:"+vactoryX+", vactoryY:"+vactoryY+", vactoryRoom:"+vactory);
+        maze.setVatoryRoom(vactory);
+        return maze;
     }
 
     private static Maze buildRoom(MazeBuilder builder) {
@@ -227,7 +232,7 @@ public final class ZQMazeGambeBuilder {
         }
 
         // Reached goal
-        if (x == COL && y == ROW){
+        if (x == vactoryX && y == vactoryY){
             done = true;
         }
 
@@ -274,8 +279,8 @@ public final class ZQMazeGambeBuilder {
         int currentRoomNum = mazePanel.getMaze().getCurrentRoom().getRoomNumber();
         System.out.println("Current Room:"+currentRoomNum);
 
-        X = currentRoomNum % COL;
-        Y = currentRoomNum / COL + 1;
+        int X = currentRoomNum % COL;
+        int Y = currentRoomNum / COL + 1;
         if (X == 0){
             X = COL;
             Y = Y - 1;

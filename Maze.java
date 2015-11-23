@@ -1,11 +1,15 @@
 package maze;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Stack;
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class Maze implements Cloneable {
@@ -91,6 +95,16 @@ public class Maze implements Cloneable {
             view.repaint();
     }
 
+    private int vatoryRoom;
+
+    public int getVatoryRoom() {
+        return vatoryRoom;
+    }
+
+    public void setVatoryRoom(int vatoryRoom) {
+        this.vatoryRoom = vatoryRoom;
+    }
+
     public void draw(Graphics g) {
         if (dim == null) {
             calculateDimension();
@@ -118,6 +132,26 @@ public class Maze implements Cloneable {
                             dx + location.x * ROOM_SIZE,
                             dy + location.y * ROOM_SIZE,
                             ROOM_SIZE, ROOM_SIZE);
+
+                    if (room.getRoomNumber() == vatoryRoom){//Draw goal image
+
+                        BufferedImage img = null;
+                        try{
+                            img = ImageIO.read(new File("./src/Box.png"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (img != null){
+                            g.drawImage(
+                                    img,
+                                    (dx + location.x * ROOM_SIZE) + 8,
+                                    (dy + location.y * ROOM_SIZE) + 8,
+                                    ROOM_SIZE-16,
+                                    ROOM_SIZE-16,
+                                    null);
+                        }
+                    }
                 }
             }
         }
@@ -262,7 +296,7 @@ public class Maze implements Cloneable {
     private static final int WALL_THICKNESS = 6;
     private static final int MARGIN = 20;
 
-    private static final boolean debug = true;
+    private static final boolean debug = false;
 
     public static class MazePanel extends JPanel {
 
