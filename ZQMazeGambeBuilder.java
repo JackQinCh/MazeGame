@@ -88,6 +88,11 @@ public final class ZQMazeGambeBuilder {
         if (vactoryY == 0)
             vactoryY = ROW;
         vactory = (vactoryY-1)*COL + vactoryX;
+        if (vactory == 1){
+            vactoryX = COL;
+            vactoryY = ROW;
+            vactory = (vactoryY-1)*COL + vactoryX;
+        }
         System.out.println("vactoryX:"+vactoryX+", vactoryY:"+vactoryY+", vactoryRoom:"+vactory);
         maze.setVictoryRoom(vactory);
         return maze;

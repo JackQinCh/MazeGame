@@ -1,7 +1,13 @@
 package maze;
 
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+
 import java.awt.*;
 import java.applet.AudioClip;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Room implements MapSite {
 
@@ -63,6 +69,15 @@ public class Room implements MapSite {
 
     public void enter(Maze maze) {
         maze.setCurrentRoom(this);
+        try{
+            FileInputStream doorAu = new FileInputStream("./src/Walk.wav");
+            AudioStream as = new AudioStream(doorAu);
+            AudioPlayer.player.start(as);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //        gong.play();
     }
 

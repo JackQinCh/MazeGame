@@ -1,7 +1,13 @@
 package maze;
 
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+
 import java.awt.*;
 import java.applet.AudioClip;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Door implements MapSite {
 
@@ -53,7 +59,15 @@ public class Door implements MapSite {
                 otherRoom.enter(maze);
             }
         } else {
-//            ding.play();
+            try{
+                FileInputStream doorAu = new FileInputStream("./src/Door.wav");
+                AudioStream as = new AudioStream(doorAu);
+                AudioPlayer.player.start(as);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -80,7 +94,5 @@ public class Door implements MapSite {
     protected Room room2;
     protected boolean open;
     protected Orientation orientation;
-
-//    protected static AudioClip ding = util.AudioUtility.getAudioClip("audio/ding.au");
 
 }

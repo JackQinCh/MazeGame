@@ -1,7 +1,12 @@
 package maze;
 
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Stack;
@@ -58,9 +63,19 @@ public class Maze implements Cloneable {
     }
     private void checkVictory(){
         if (curRoom.getRoomNumber() == victoryRoom){
+            System.out.println("Current:"+curRoom.getRoomNumber()+", Victory:"+victoryRoom);
             isVictory = true;
             if (view != null) {
                 view.repaint();
+            }
+            try{
+                FileInputStream doorAu = new FileInputStream("./src/Victory.wav");
+                AudioStream as = new AudioStream(doorAu);
+                AudioPlayer.player.start(as);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             JOptionPane.showMessageDialog(view ,
                     "Congratulations! You got the box!\n" +
