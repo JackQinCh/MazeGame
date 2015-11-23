@@ -20,6 +20,7 @@ public class ZQMazePanel extends JPanel {
     }
 
     protected void setMaze(Maze maze){
+        this.maze = null;
         this.maze = maze;
         if (maze != null) {
             maze.setView(this);
