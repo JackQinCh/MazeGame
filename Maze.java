@@ -40,8 +40,9 @@ public class Maze implements Cloneable {
         setCurrentRoom(room);
     }
 
+    private boolean isVactory = false;
     public void setCurrentRoom(Room room) {
-        if (room != curRoom) {
+        if (room != curRoom && !isVactory) {
             if (curRoom != null) {
                 curRoom.setInRoom(false);
             }
@@ -52,6 +53,18 @@ public class Maze implements Cloneable {
             if (view != null) {
                 view.repaint();
             }
+            checkVactory();
+        }
+    }
+    private void checkVactory(){
+        if (curRoom.getRoomNumber() == vatoryRoom){
+            isVactory = true;
+            if (view != null) {
+                view.repaint();
+            }
+            JOptionPane.showMessageDialog(view ,
+                    "Congratulations! You got the box!\n" +
+                    "Please start a new game.");
         }
     }
 
@@ -136,8 +149,11 @@ public class Maze implements Cloneable {
                     if (room.getRoomNumber() == vatoryRoom){//Draw goal image
 
                         BufferedImage img = null;
+                        String imgScr = "./src/Box.png";
+                        if (isVactory)
+                            imgScr = "./src/BoxOpen.png";
                         try{
-                            img = ImageIO.read(new File("./src/Box.png"));
+                            img = ImageIO.read(new File(imgScr));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

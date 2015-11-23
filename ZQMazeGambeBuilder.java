@@ -1,5 +1,6 @@
 package maze;
 
+import javax.swing.*;
 import java.util.Random;
 
 /**
@@ -293,6 +294,10 @@ public final class ZQMazeGambeBuilder {
         done = false;
 
         solve(X, Y, mazePanel, null);
+
+//        if (done){
+//            JOptionPane.showMessageDialog(mazePanel,"Congratulations! You got the box!");
+//        }
 
     }
 
