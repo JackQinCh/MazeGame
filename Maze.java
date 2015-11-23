@@ -3,20 +3,20 @@ package maze;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
-import java.util.LinkedList;
-import java.util.Stack;
-import java.util.List;
-import java.util.ArrayList;
-import java.awt.*;
-import java.awt.event.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Stack;
 
 public class Maze implements Cloneable {
 
@@ -57,7 +57,7 @@ public class Maze implements Cloneable {
                 curRoom = room;
             }
             if (view != null) {
-                view.repaint();
+                view.get().repaint();
             }
             checkVictory();
         }
@@ -67,7 +67,7 @@ public class Maze implements Cloneable {
             System.out.println("Current:"+curRoom.getRoomNumber()+", Victory:"+victoryRoom);
             isVictory = true;
             if (view != null) {
-                view.repaint();
+                view.get().repaint();
             }
             try{
 //                FileInputStream doorAu = new FileInputStream("./src/Victory.wav");
@@ -79,7 +79,7 @@ public class Maze implements Cloneable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            JOptionPane.showMessageDialog(view ,
+            JOptionPane.showMessageDialog(view.get() ,
                     "Congratulations! You got the box!\n" +
                     "Please start a new game.");
         }
@@ -122,7 +122,7 @@ public class Maze implements Cloneable {
             door.setOpen(status);
         }
         if (view != null)
-            view.repaint();
+            view.get().repaint();
     }
 
     private int victoryRoom;
@@ -297,7 +297,7 @@ public class Maze implements Cloneable {
         return true;
     }
 
-    protected void setView(Component view) {
+    protected void setView(WeakReference<Component> view) {
         this.view = view;
     }
 
@@ -326,7 +326,7 @@ public class Maze implements Cloneable {
     protected Room curRoom = null;
     protected Stack moves = new Stack();
 
-    protected Component view;
+    protected WeakReference<Component> view;
 
     private static final int ROOM_SIZE = 40;
     private static final int WALL_THICKNESS = 6;
@@ -339,13 +339,13 @@ public class Maze implements Cloneable {
         public MazePanel(Maze maze) {
             this.maze = maze;
             if (maze != null) {
-                maze.setView(this);
+                maze.setView(new WeakReference<>(this));
                 Dimension d = maze.getDimension();
                 if (d != null) {
                     dim = new Dimension(d.width * ROOM_SIZE + 2 * MARGIN,
                             d.height * ROOM_SIZE + 2 * MARGIN);
                 }
-                addKeyListener(new MazeKeyListener(maze));
+                addKeyListener(new MazeKeyListener(this));
             }
         }
 
@@ -375,12 +375,15 @@ public class Maze implements Cloneable {
         private Maze maze;
         private Dimension dim;
 
+        public Maze getMaze() {
+            return maze;
+        }
     }
 
     static class MazeKeyListener extends KeyAdapter {
 
-        MazeKeyListener(Maze maze) {
-            this.maze = maze;
+        MazeKeyListener(MazePanel mazePanel) {
+            this.mazePanel = mazePanel;
         }
 
         public void keyPressed(KeyEvent e) {
@@ -390,30 +393,29 @@ public class Maze implements Cloneable {
             switch (code) {
                 case KeyEvent.VK_UP:
                     System.out.println("Up key");
-                    command = new MazeMoveCommand(maze, Direction.NORTH);
+                    command = new MazeMoveCommand(mazePanel.getMaze(), Direction.NORTH);
                     break;
                 case KeyEvent.VK_DOWN:
                     System.out.println("Down key");
-                    command = new MazeMoveCommand(maze, Direction.SOUTH);
-                    maze.move(Direction.SOUTH);
+                    command = new MazeMoveCommand(mazePanel.getMaze(), Direction.SOUTH);
                     break;
                 case KeyEvent.VK_LEFT:
                     System.out.println("Left key");
-                    command = new MazeMoveCommand(maze, Direction.WEST);
+                    command = new MazeMoveCommand(mazePanel.getMaze(), Direction.WEST);
                     break;
                 case KeyEvent.VK_RIGHT:
                     System.out.println("Right key");
-                    command = new MazeMoveCommand(maze, Direction.EAST);
+                    command = new MazeMoveCommand(mazePanel.getMaze(), Direction.EAST);
                     break;
                 default:
                     System.out.println("Key press ignored");
             }
             if (command != null) {
-                maze.doCommand(command);
+                mazePanel.getMaze().doCommand(command);
             }
         }
 
-        Maze maze;
+        MazePanel mazePanel;
     }
 
 }

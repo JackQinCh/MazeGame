@@ -2,6 +2,7 @@ package maze;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by jack on 15/11/21.
@@ -13,6 +14,7 @@ public class ZQMazePanel extends JPanel {
 
     public ZQMazePanel(Maze maze) {
         setMaze(maze);
+        addKeyListener(new ZQMazeKeyListener(this));
     }
 
     public Maze getMaze() {
@@ -20,16 +22,14 @@ public class ZQMazePanel extends JPanel {
     }
 
     protected void setMaze(Maze maze){
-        this.maze = null;
         this.maze = maze;
         if (maze != null) {
-            maze.setView(this);
+            maze.setView(new WeakReference<>(this));
             Dimension d = maze.getDimension();
             if (d != null) {
                 dim = new Dimension(d.width * ROOM_SIZE + 2 * MARGIN,
                         d.height * ROOM_SIZE + 2 * MARGIN);
             }
-            addKeyListener(new ZQMazeKeyListener(maze));
         }
         repaint();
     }

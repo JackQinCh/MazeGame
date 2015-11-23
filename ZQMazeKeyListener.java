@@ -8,8 +8,8 @@ import java.awt.event.KeyEvent;
  */
 public class ZQMazeKeyListener extends KeyAdapter {
 
-    ZQMazeKeyListener(Maze maze) {
-        this.maze = maze;
+    ZQMazeKeyListener(ZQMazePanel mazePanel) {
+        this.mazePanel = mazePanel;
     }
 
     public void keyPressed(KeyEvent e) {
@@ -19,30 +19,30 @@ public class ZQMazeKeyListener extends KeyAdapter {
         switch (code) {
             case KeyEvent.VK_UP:
                 System.out.println("Up key");
-                command = new MazeMoveCommand(maze, Direction.NORTH);
+                command = new MazeMoveCommand(mazePanel.getMaze(), Direction.NORTH);
                 break;
             case KeyEvent.VK_DOWN:
                 System.out.println("Down key");
-                command = new MazeMoveCommand(maze, Direction.SOUTH);
+                command = new MazeMoveCommand(mazePanel.getMaze(), Direction.SOUTH);
                 break;
             case KeyEvent.VK_LEFT:
                 System.out.println("Left key");
-                command = new MazeMoveCommand(maze, Direction.WEST);
+                command = new MazeMoveCommand(mazePanel.getMaze(), Direction.WEST);
                 break;
             case KeyEvent.VK_RIGHT:
                 System.out.println("Right key");
-                command = new MazeMoveCommand(maze, Direction.EAST);
+                command = new MazeMoveCommand(mazePanel.getMaze(), Direction.EAST);
                 break;
             case KeyEvent.VK_ENTER:
-                command = new ZQMazeOpenDoorCommand(maze);
+                command = new ZQMazeOpenDoorCommand(mazePanel.getMaze());
                 break;
             default:
                 System.out.println("Key press ignored");
         }
         if (command != null) {
-            maze.doCommand(command);
+            mazePanel.getMaze().doCommand(command);
         }
     }
 
-    Maze maze;
+    ZQMazePanel mazePanel;
 }
