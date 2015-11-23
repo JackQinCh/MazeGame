@@ -8,6 +8,7 @@ import java.applet.AudioClip;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 
 public class Room implements MapSite {
 
@@ -70,8 +71,9 @@ public class Room implements MapSite {
     public void enter(Maze maze) {
         maze.setCurrentRoom(this);
         try{
-            FileInputStream doorAu = new FileInputStream("./src/Walk.wav");
-            AudioStream as = new AudioStream(doorAu);
+//            FileInputStream doorAu = new FileInputStream("./src/Walk.wav");
+            URL auURL = getClass().getResource("res/Walk.wav");
+            AudioStream as = new AudioStream(auURL.openStream());
             AudioPlayer.player.start(as);
         } catch (FileNotFoundException e) {
             e.printStackTrace();

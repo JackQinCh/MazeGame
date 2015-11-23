@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.Stack;
 import java.util.List;
@@ -69,8 +70,9 @@ public class Maze implements Cloneable {
                 view.repaint();
             }
             try{
-                FileInputStream doorAu = new FileInputStream("./src/Victory.wav");
-                AudioStream as = new AudioStream(doorAu);
+//                FileInputStream doorAu = new FileInputStream("./src/Victory.wav");
+                URL auURL = getClass().getResource("res/Victory.wav");
+                AudioStream as = new AudioStream(auURL.openStream());
                 AudioPlayer.player.start(as);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -164,11 +166,14 @@ public class Maze implements Cloneable {
                     if (room.getRoomNumber() == victoryRoom){//Draw goal image
 
                         BufferedImage img = null;
-                        String imgScr = "./src/Box.png";
+                        String imgScr = "res/Box.png";
                         if (isVictory)
-                            imgScr = "./src/BoxOpen.png";
+                            imgScr = "res/BoxOpen.png";
+
+                        URL imgURL = getClass().getResource(imgScr);
+
                         try{
-                            img = ImageIO.read(new File(imgScr));
+                            img = ImageIO.read(imgURL);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

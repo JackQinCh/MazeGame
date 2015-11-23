@@ -10,6 +10,7 @@ import java.applet.AudioClip;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 
 public class Wall implements MapSite {
 
@@ -21,8 +22,9 @@ public class Wall implements MapSite {
 
     public void enter(Maze maze) {
         try{
-            FileInputStream doorAu = new FileInputStream("./src/Wall.wav");
-            AudioStream as = new AudioStream(doorAu);
+//            FileInputStream doorAu = new FileInputStream("./src/Wall.wav");
+            URL auURL = getClass().getResource("res/Wall.wav");
+            AudioStream as = new AudioStream(auURL.openStream());
             AudioPlayer.player.start(as);
         } catch (FileNotFoundException e) {
             e.printStackTrace();

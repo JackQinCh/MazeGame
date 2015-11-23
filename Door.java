@@ -8,6 +8,7 @@ import java.applet.AudioClip;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 
 public class Door implements MapSite {
 
@@ -60,8 +61,9 @@ public class Door implements MapSite {
             }
         } else {
             try{
-                FileInputStream doorAu = new FileInputStream("./src/Door.wav");
-                AudioStream as = new AudioStream(doorAu);
+//                FileInputStream doorAu = new FileInputStream("./src/Door.wav");
+                URL auURL = getClass().getResource("res/Door.wav");
+                AudioStream as = new AudioStream(auURL.openStream());
                 AudioPlayer.player.start(as);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
