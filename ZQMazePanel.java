@@ -5,7 +5,8 @@ import java.awt.*;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by jack on 15/11/21.
+ * ZQMazePanel paint Maze.
+ * Created by Zhonghua on 15/11/21.
  */
 public class ZQMazePanel extends JPanel {
     private static final int ROOM_SIZE = 40;

@@ -3,7 +3,8 @@ package maze;
 import java.util.List;
 
 /**
- * Created by jack on 15/11/21.
+ * ZQMazeOpenDoorCommand is open door command.
+ * Created by Zhonghua on 15/11/21.
  */
 public class ZQMazeOpenDoorCommand implements UndoableCommand{
     @Override
@@ -27,5 +28,6 @@ public class ZQMazeOpenDoorCommand implements UndoableCommand{
     public ZQMazeOpenDoorCommand(Maze maze) {
         this.maze = maze;
     }
+    /* Record doors have been opened. */
     List<Door> doors;
 }

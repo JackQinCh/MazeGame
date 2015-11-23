@@ -2,7 +2,8 @@ package maze;
 
 
 /**
- * Created by jack on 15/11/21.
+ * Maze static Factory generates maze with given theme.
+ * Created by Zhonghua on 15/11/21.
  */
 public final class ZQThemesFactory {
     private static MazeFactory factory = new MazeFactory();
@@ -15,6 +16,12 @@ public final class ZQThemesFactory {
 
     private static final String[] themes = {"Harry", "Snow", "Default"};
 
+    /**
+     * Static Factory
+     * Create maze with given theme.
+     * @param theme
+     * @return Maze
+     */
     public static Maze createMazeWithTheme(String theme){
         switch (theme){
             case "Harry":
@@ -43,6 +50,13 @@ public final class ZQThemesFactory {
         return COL;
     }
 
+    /**
+     *  Static Factory
+     * Create maze with given row and col.
+     * @param row
+     * @param col
+     * @return Maze
+     */
     public static Maze createMazeWithSize(int row, int col){
         ROW = row;
         COL = col;

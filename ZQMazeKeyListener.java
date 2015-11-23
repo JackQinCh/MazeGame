@@ -4,7 +4,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 /**
- * Created by jack on 15/11/21.
+ * ZQMazeKeyListener observes the key action events.
+ * Add Enter key action event.
+ * Created by Zhonghua on 15/11/21.
  */
 public class ZQMazeKeyListener extends KeyAdapter {
 
@@ -34,6 +36,7 @@ public class ZQMazeKeyListener extends KeyAdapter {
                 command = new MazeMoveCommand(mazePanel.getMaze(), Direction.EAST);
                 break;
             case KeyEvent.VK_ENTER:
+                System.out.println("Enter key");
                 command = new ZQMazeOpenDoorCommand(mazePanel.getMaze());
                 break;
             default:

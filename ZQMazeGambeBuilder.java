@@ -3,7 +3,8 @@ package maze;
 import java.util.Random;
 
 /**
- * Created by jack on 15/11/21.
+ * ZQMazeGambeBuilder builds rooms and contains generator and solve method.
+ * Created by Zhonghua on 15/11/21.
  */
 public final class ZQMazeGambeBuilder {
     private static int COL = 3;                 // dimension of maze
@@ -30,6 +31,13 @@ public final class ZQMazeGambeBuilder {
     }
 
 
+    /**
+     * Static Generator Factory generates Maze
+     * @param builder
+     * @param row
+     * @param col
+     * @return
+     */
     public static Maze createMaze(MazeBuilder builder, int row, int col) {
         ROW = row;
         COL = col;
@@ -278,7 +286,10 @@ public final class ZQMazeGambeBuilder {
 
     }
 
-    // solve the maze starting from the start state
+    /**
+     * Solve the maze starting from the start state
+     * @param mazePanel
+     */
     public static void solve(ZQMazePanel mazePanel) {
         System.out.println("Start Solve");
         int currentRoomNum = mazePanel.getMaze().getCurrentRoom().getRoomNumber();

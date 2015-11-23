@@ -6,7 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by jack on 15/11/21.
+ * Zhonghua's Maze Main JFrame class
+ * Created by Zhonghua on 15/11/21.
  */
 public class ZQMain extends JFrame{
 
@@ -172,6 +173,10 @@ public class ZQMain extends JFrame{
         protected ZQMazePanel mazePanel;
     }
 
+    /**
+     * Main Entrance
+     * @param args
+     */
     public static void main(String[] args) {
 
         JFrame frame;
